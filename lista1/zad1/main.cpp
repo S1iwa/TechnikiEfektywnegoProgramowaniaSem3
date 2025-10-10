@@ -1,0 +1,36 @@
+//
+// Created by S1iwa on 09.10.2025.
+//
+
+#include <iostream>
+
+using namespace std;
+
+void wyswietlElementyTablicy(const int* table, const int iSize) {
+  for (int i = 0; i < iSize; i++)
+    cout << table[i] << " ";
+  cout << endl;
+}
+
+void v_alloc_table_fill_34(int iSize) {
+  if (iSize <= 0) {
+    cout << "Rozmiar tablicy musi byc wiekszy od 0." << endl;
+    return;
+  }
+
+  int* table = new int[iSize];
+  const int value = 34;
+
+  for (int i = 0; i < iSize; i++)
+    table[i] = value;
+
+  cout << "Wartosci tabeli: " << endl;
+  wyswietlElementyTablicy(table, iSize);
+
+  delete[] table;
+}
+
+int main() {
+  v_alloc_table_fill_34(3);
+  return 0;
+}
