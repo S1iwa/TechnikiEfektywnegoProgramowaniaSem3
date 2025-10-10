@@ -6,7 +6,6 @@
 #define TECHNIKIEFEKTYWNEGOPROGRAMOWANIASEM3_CTABLE_H
 #include <string>
 
-
 class CTable {
   private:
   std::string s_name;
@@ -20,12 +19,10 @@ class CTable {
   ~CTable();
 
   void vSetName(std::string sName);
-
   bool bSetNewSize(int iTableLen);
 
-  CTable *pcClone() {
-    return new CTable(*this);
-  }
+  CTable* pcClone();
+  void copyFrom(const CTable& pcOther);
 };
 
 

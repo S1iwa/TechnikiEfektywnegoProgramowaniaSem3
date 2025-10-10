@@ -33,15 +33,7 @@ CTable::CTable(string sName, int iTableLen) {
 }
 
 CTable::CTable(CTable &pcOther) {
-  vSetName(pcOther.s_name + "_copy");
-  cout << s_name << endl;
-
-  size = pcOther.size;
-  table = new int[size];
-  for (int i = 0; i < size; i++)
-    table[i] = pcOther.table[i];
-
-  cout << "kopiuj: '" << s_name << "'" << endl;
+  copyFrom(pcOther);
 }
 
 CTable::~CTable() {
@@ -68,4 +60,20 @@ bool CTable::bSetNewSize(int iTableLen) {
   table = newTable;
   size = iTableLen;
   return true;
+}
+
+CTable* CTable::pcClone() {
+  return new CTable(*this);
+}
+
+void CTable::copyFrom(const CTable &pcOther) {
+  vSetName(pcOther.s_name + "_copy");
+  cout << s_name << endl;
+
+  size = pcOther.size;
+  table = new int[size];
+  for (int i = 0; i < size; i++)
+    table[i] = pcOther.table[i];
+
+  cout << "kopiuj: '" << s_name << "'" << endl;
 }
