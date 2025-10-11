@@ -3,16 +3,25 @@
 //
 
 #include <iostream>
+#include "main.h"
 
 using std::cout;
 using std::endl;
 
-void wyswietlElementyTablicy(int **table, int iSizeX, int iSizeY) {
-  for (int i = 0; i < iSizeY; i++) {
-    for (int j = 0; j < iSizeX; j++)
-      cout << table[i][j] << " ";
-    cout << endl;
+int main() {
+  int iSizeX = 5;
+  int iSizeY = 3;
+  int **table;
+
+  // ReSharper disable once CppDFAConstantConditions
+  if (!b_alloc_table_2_dim(&table, iSizeX, iSizeY)) {
+    cout << "Niepoprawny rozmiar tablicy!" << endl;
+    return -1;
   }
+
+  wyswietlElementyTablicy(table, iSizeX, iSizeY);
+  b_dealoc_table_2_dim(table, iSizeX, iSizeY);
+  return 0;
 }
 
 bool b_alloc_table_2_dim(int ***piTable, int iSizeX, int iSizeY) {
@@ -37,18 +46,10 @@ bool b_dealoc_table_2_dim(int **piTable, int iSizeX, int iSizeY) {
   return true;
 }
 
-int main() {
-  int iSizeX = 5;
-  int iSizeY = 3;
-  int **table;
-
-  // ReSharper disable once CppDFAConstantConditions
-  if (!b_alloc_table_2_dim(&table, iSizeX, iSizeY)) {
-    cout << "Niepoprawny rozmiar tablicy!" << endl;
-    return -1;
+void wyswietlElementyTablicy(int **table, int iSizeX, int iSizeY) {
+  for (int i = 0; i < iSizeY; i++) {
+    for (int j = 0; j < iSizeX; j++)
+      cout << table[i][j] << " ";
+    cout << endl;
   }
-
-  wyswietlElementyTablicy(table, iSizeX, iSizeY);
-  b_dealoc_table_2_dim(table, iSizeX, iSizeY);
-  return 0;
 }

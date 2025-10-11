@@ -3,6 +3,7 @@
 //
 
 #include "CTable.h"
+#include "main.h"
 
 int main() {
   CTable c_tab1;

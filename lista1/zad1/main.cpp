@@ -3,14 +3,14 @@
 //
 
 #include <iostream>
+#include "main.h"
 
 using std::cout;
 using std::endl;
 
-void wyswietlElementyTablicy(const int* table, const int iSize) {
-  for (int i = 0; i < iSize; i++)
-    cout << table[i] << " ";
-  cout << endl;
+int main() {
+  v_alloc_table_fill_34(3);
+  return 0;
 }
 
 void v_alloc_table_fill_34(int iSize) {
@@ -31,7 +31,8 @@ void v_alloc_table_fill_34(int iSize) {
   delete[] table;
 }
 
-int main() {
-  v_alloc_table_fill_34(3);
-  return 0;
+void wyswietlElementyTablicy(int* table, int iSize) {
+  for (int i = 0; i < iSize; i++)
+    cout << table[i] << " ";
+  cout << endl;
 }
