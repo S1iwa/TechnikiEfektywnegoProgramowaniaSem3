@@ -4,8 +4,6 @@
 
 #include "CTable.h"
 
-using namespace std;
-
 int main() {
   CTable c_tab1;
   CTable c_tab2("tab2", 5);

@@ -7,7 +7,10 @@
 #include <iostream>
 #include <ostream>
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::string;
+using std::min;
 
 CTable::CTable() {
   vSetName("default");
@@ -52,7 +55,7 @@ bool CTable::bSetNewSize(int iTableLen) {
     return false;
 
   int *newTable = new int[iTableLen];
-  int minSize = std::min(iTableLen, size);
+  int minSize = min(iTableLen, size);
   for (int i = 0; i < minSize; i++)
     newTable[i] = table[i];
 

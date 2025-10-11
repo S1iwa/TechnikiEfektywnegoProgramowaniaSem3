@@ -4,7 +4,8 @@
 
 #include <iostream>
 
-using namespace std;
+using std::cout;
+using std::endl;
 
 void wyswietlElementyTablicy(int **table, int iSizeX, int iSizeY) {
   for (int i = 0; i < iSizeY; i++) {
