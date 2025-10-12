@@ -53,9 +53,7 @@ bool b_dealoc_table_2_dim(int ***piTable, int iSizeY) {
     delete[] (*piTable)[i];
   delete[] *piTable;
 
-  // Ustawiamy oryginalny wskaźnik w main na nullptr
   *piTable = NULL;
-
   return true;
 }
 
