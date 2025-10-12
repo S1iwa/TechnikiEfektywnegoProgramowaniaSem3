@@ -12,10 +12,14 @@ using std::endl;
 using std::string;
 using std::min;
 
+string CTable::default_name = "default";
+int CTable::default_size = 10;
+
 CTable::CTable() {
-  vSetName("default");
+  vSetName(default_name);
   cout << "bezp: '" << s_name << "'" << endl;
-  size = 10;
+
+  size = default_size;
   table = new int[size];
 }
 
@@ -46,7 +50,7 @@ CTable::~CTable() {
 
 void CTable::vSetName(string sName) {
   if (sName.empty())
-    s_name = "default";
+    s_name = default_name;
   s_name = sName;
 }
 

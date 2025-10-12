@@ -9,12 +9,16 @@
 using std::string;
 
 class CTable {
-  private:
+private:
   std::string s_name;
+  static string default_name;
+
   int size;
+  static int default_size;
+
   int *table;
 
-  public:
+public:
   CTable();
   CTable(string sName, int iTableLen);
   CTable(CTable &pcOther);
