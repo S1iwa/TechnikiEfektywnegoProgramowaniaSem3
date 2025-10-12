@@ -7,6 +7,6 @@
 
 void wyswietlElementyTablicy(int **table, int iSizeX, int iSizeY);
 bool b_alloc_table_2_dim(int ***piTable, int iSizeX, int iSizeY);
-bool b_dealoc_table_2_dim(int **piTable, int iSizeX, int iSizeY);
+bool b_dealoc_table_2_dim(int ***piTable, int iSizeY);
 
 #endif //TECHNIKIEFEKTYWNEGOPROGRAMOWANIASEM3_MAIN_H

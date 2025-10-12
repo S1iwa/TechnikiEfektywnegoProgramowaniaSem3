@@ -19,14 +19,14 @@ void v_alloc_table_fill_34(int iSize) {
     return;
   }
 
-  int* table = new int[iSize];
+  int* table = NULL;
+        table = new int[iSize];
+
   const int value = 34;
-
-  for (int i = 0; i < iSize; i++)
+  for (int i = 0; i < iSize; i++) {
     table[i] = value;
-
-  cout << "Wartosci tabeli: " << endl;
-  wyswietlElementyTablicy(table, iSize);
+    cout << table[i] << endl;
+  }
 
   delete[] table;
 }
