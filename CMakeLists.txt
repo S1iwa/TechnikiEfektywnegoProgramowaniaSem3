@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.5)
 project(TechnikiEfektywnegoProgramowaniaSem3)
 
 set(CMAKE_CXX_STANDARD 98)
