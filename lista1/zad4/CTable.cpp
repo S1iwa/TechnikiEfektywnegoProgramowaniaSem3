@@ -80,3 +80,11 @@ void CTable::copyFrom(const CTable &pcOther) {
 
   cout << "kopiuj: '" << s_name << "'" << endl;
 }
+
+string CTable::getName() const {
+  return s_name;
+}
+
+int CTable::getSize() const {
+  return size;
+}
