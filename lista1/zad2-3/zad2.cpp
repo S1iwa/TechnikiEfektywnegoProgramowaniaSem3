@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "main.h"
+#include "zad2.h"
 
 using std::cout;
 using std::endl;

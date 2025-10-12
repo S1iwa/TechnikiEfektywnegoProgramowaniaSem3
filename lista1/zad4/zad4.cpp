@@ -3,7 +3,7 @@
 //
 
 #include "CTable.h"
-#include "main.h"
+#include "zad4.h"
 
 #include <iostream>
 

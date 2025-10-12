@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "main.h"
+#include "zad1.h"
 
 using std::cout;
 using std::endl;
@@ -22,7 +22,6 @@ void v_alloc_table_fill_34(int iSize) {
   int* table = NULL;
         table = new int[iSize];
 
-  const int value = 34;
   for (int i = 0; i < iSize; i++) {
     table[i] = value;
     cout << table[i] << endl;
@@ -31,7 +30,7 @@ void v_alloc_table_fill_34(int iSize) {
   delete[] table;
 }
 
-void wyswietlElementyTablicy(int* table, int iSize) {
+void wyswietlElementyTablicy(int *table, int iSize) {
   for (int i = 0; i < iSize; i++)
     cout << table[i] << " ";
   cout << endl;
