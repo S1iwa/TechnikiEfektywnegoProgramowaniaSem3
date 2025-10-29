@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
-project(TechnikiEfektywnegoProgramowaniaSem3)
+project(TEPsem3)
 
 set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(zad1
         lista1/zad1/zad1.cpp
-        lista1/zad1/zad1.h)
+        lista1/zad1/zad1.h
+        lista2/Tester.cpp
+        lista2/Tester.h)
 
 add_executable(zad2-3
         lista1/zad2-3/zad2.cpp
@@ -17,3 +19,10 @@ add_executable(zad4
         lista1/zad4/zad4.h
         lista1/zad4/CTable.cpp
         lista1/zad4/CTable.h)
+
+add_executable(lista2
+        lista2/Number.cpp
+        lista2/Number.cpp
+        lista2/Tester.cpp
+        lista2/Tester.h
+)
