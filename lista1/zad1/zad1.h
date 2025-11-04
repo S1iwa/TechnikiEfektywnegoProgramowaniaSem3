@@ -7,7 +7,7 @@
 
 const int value = 34;
 
-void wyswietlElementyTablicy(const int* table, int iSize);
+void wyswietlElementyTablicy(int* table, int iSize);
 void v_alloc_table_fill_34(int iSize);
 
 #endif //TECHNIKIEFEKTYWNEGOPROGRAMOWANIASEM3_MAIN_H

@@ -4,6 +4,7 @@
 
 #include "Number.h"
 #include <iostream>
+#include <string>
 
 /* KONSTRUKTORY */
 
@@ -48,6 +49,7 @@ Number& Number::operator=(const Number &other) {
 }
 
 Number& Number::operator=(int value) {
+  delete [] table;
   *this = Number(value);
   return *this;
 }
@@ -59,14 +61,27 @@ Number::Number(const Number &other) {
 /* OPERATORY STRUMIENIOWE */
 
 std::ostream& operator<<(std::ostream &os, const Number &number) {
+  if (number.isNegative)
+    os << '-';
+  else
+    os << '+';
   for (int i = 0; i < number.length; ++i)
     os << number.table[i];
   return os;
 }
 
-/* OPERATORY ARYTMETYCZNE */
+std::string Number::toString() const {
+  std::string result;
+  if (isNegative)
+    result += '-';
+  for (int i = 0; i < length; ++i)
+    result += static_cast<char>(table[i]);
+  return result;
+}
 
-Number Number::operator+(const Number &other) const {
+/* OPERATORY MATEMATYCZNE */
+
+Number Number::add(const Number &other) const {
   int maxLength = (length > other.length) ? length : other.length;
 
   int carry = 0;
@@ -94,32 +109,123 @@ Number Number::operator+(const Number &other) const {
   return result;
 }
 
-Number Number::operator-(const Number &other) const {
-  int maxLength = (length > other.length) ? length : other.length;
+Number Number::subtract(const Number &other) const {
+  int borrow = 0;
+  bool willBeNegative = true;
 
-  int carry = 0;
-  int i = length - 1;
-  int j = other.length - 1;
-  int *tempTable = new int[maxLength + 1];
+  Number bigger = other;
+  Number smaller = *this;
+  if (this->isGreater(other)) {
+    willBeNegative = false;
+    bigger = *this;
+    smaller = other;
+  }
+
+  int i = bigger.length - 1;
+  int j = smaller.length - 1;
+  int *tempTable = new int[bigger.length];
 
   int index = 0;
-  while (i >= 0 || j >= 0 || carry > 0) {
-    int sum = carry;
+  while (i >= 0) {
+    int digit1 = bigger.table[i];
+    int digit2 = (j >= 0) ? smaller.table[j] : 0;
 
-    if (i >= 0)
-      sum += table[i--];
-    if (j >= 0)
-      sum += other.table[j--];
+    digit1 -= borrow;
+    if (digit1 < digit2) {
+      digit1 += 10;
+      borrow = 1;
+    } else {
+      borrow = 0;
+    }
 
-    tempTable[index++] = sum % 10;
-    carry = sum / 10;
+    tempTable[index++] = digit1 - digit2;
+    i--;
+    j--;
   }
 
   reverseTable(tempTable, index);
 
-  Number result(tempTable, index, false);
+  int zeros = 0;
+  while (zeros < index - 1 && tempTable[zeros] == 0)
+    zeros++;
+
+  Number result(tempTable, index - zeros, willBeNegative);
   delete[] tempTable;
   return result;
+}
+
+Number Number::multiply(const Number &other) const {
+  return Number(0);
+}
+
+Number Number::devide(const Number &other) const {
+  return Number(0);
+}
+
+/* OPERATORY ARYTMETYCZNE */
+
+Number Number::operator+(const Number &other) const {
+  // A + B
+  if (!this->isNegative && !other.isNegative)
+    return this->add(other);
+
+  // A + (-B) = A - B
+  if (!this->isNegative && other.isNegative)
+    return this->subtract(other);
+
+  // (-A) + B = B - A
+  if (this->isNegative && !other.isNegative)
+    return other.subtract(*this);
+
+  // (-A) + (-B) = -(A + B)
+  Number result = this->add(other);
+  result.isNegative = true;
+  return result;
+}
+
+Number Number::operator-(const Number &other) const {
+  // A - (-B) = A + B
+  if (!this->isNegative && other.isNegative)
+    return this->add(other);
+
+  // A - B
+  if (!this->isNegative && !other.isNegative)
+    return this->subtract(other);
+
+  // (-A) - (-B) = B - A
+  if (this->isNegative && other.isNegative)
+    return other.subtract(*this);
+
+  // (-A) - B = -(A + B)
+  Number result = this->add(other);
+  result.isNegative = true;
+  return result;
+}
+
+Number Number::operator*(const Number &other) const {
+
+}
+
+Number Number::operator/(const Number &other) const {
+
+}
+
+/* OPERATORY ARYTMETYCZNE Z INT */
+
+Number Number::operator+(int value) const {
+  return *this + Number(value);
+}
+
+Number Number::operator-(int value) const {
+  return *this - Number(value);
+}
+
+Number Number::operator*(int value) const {
+  return *this * Number(value);
+}
+
+Number Number::operator/(int value) const {
+  return *this / Number(value);
 }
 
 /* POMOCNICZE */
@@ -142,6 +248,28 @@ void Number::reverseTable(int *tempTable, int size) {
     tempTable[i] = tempTable[size - i - 1];
     tempTable[size - i - 1] = temp;
   }
+}
+
+bool Number::isGreater(const Number &other) const {
+  if (this->isNegative && !other.isNegative)
+    return false;
+  if (!this->isNegative && other.isNegative)
+    return true;
+
+  if (this->length > other.length)
+    return !this->isNegative;
+
+  if (this->length < other.length)
+    return this->isNegative;
+
+  for (int i = 0; i < this->length; ++i) {
+    if (this->table[i] > other.table[i])
+      return !this->isNegative;
+    if (this->table[i] < other.table[i])
+      return this->isNegative;
+  }
+
+  return false;
 }
 
 void Number::copyData(const int *newTable, int newLength, bool newIsNegative) {

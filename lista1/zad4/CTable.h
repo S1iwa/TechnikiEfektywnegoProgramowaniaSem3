@@ -32,6 +32,10 @@ public:
 
   string getName() const;
   int getSize() const;
+
+  void insertHere(int iStartIndex, const CTable& pcOther);
+  void setTableValue(int index, int value) const;
+  void print() const;
 };
 
 

@@ -9,10 +9,22 @@
 #include <ostream>
 
 int main() {
-  Number number(900);
-  Number number2(300);
-  Number number3(3000);
-  number3 = number + number2;
+  Number n1(1);
+  Number n2(2);
+  Number n3(3);
+  Number n4(4);
+  Number n5(5);
 
-  std::cout << (number3 + number2) << std::endl;
+  Number n100(100);
+  Number n200(200);
+  Number n300(300);
+  Number n400(400);
+  Number n500(500);
+
+  std::cout << (n5 - n4) << std::endl;
+  std::cout << (n1 - n3 - n5) << std::endl;
+  std::cout << (n5 - n5 - n5 + n5) << std::endl;
+  std::cout << (n500 - n5) << std::endl;
+  std::cout << (n500 + n500) << std::endl;
+  std::cout << (n500 - n500) << std::endl;
 }

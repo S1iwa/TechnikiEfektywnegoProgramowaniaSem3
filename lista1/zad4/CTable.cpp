@@ -29,7 +29,8 @@ CTable::CTable(string sName, int iTableLen) {
 
   if (sName.empty())
     vSetName("default");
-  vSetName(sName);
+  else
+    vSetName(sName);
   cout << "parametr: '" << s_name << "'" << endl;
 
   if (iTableLen <= 0)
@@ -51,7 +52,8 @@ CTable::~CTable() {
 void CTable::vSetName(string sName) {
   if (sName.empty())
     s_name = default_name;
-  s_name = sName;
+  else
+    s_name = sName;
 }
 
 bool CTable::bSetNewSize(int iTableLen) {
@@ -59,6 +61,9 @@ bool CTable::bSetNewSize(int iTableLen) {
     return false;
 
   int *newTable = new int[iTableLen];
+  // if (newTable == NULL)
+  //   return false;
+
   int minSize = min(iTableLen, size);
   for (int i = 0; i < minSize; i++)
     newTable[i] = table[i];
@@ -79,8 +84,11 @@ void CTable::copyFrom(const CTable &pcOther) {
 
   size = pcOther.size;
   table = new int[size];
-  for (int i = 0; i < size; i++)
-    table[i] = pcOther.table[i];
+  // if (table != NULL)
+    for (int i = 0; i < size; i++)
+      table[i] = pcOther.table[i];
+  // else
+  //   size = 0;
 
   cout << "kopiuj: '" << s_name << "'" << endl;
 }
@@ -91,4 +99,39 @@ string CTable::getName() const {
 
 int CTable::getSize() const {
   return size;
+}
+
+// Modyfikacja
+void CTable::insertHere(int iStartIndex, const CTable &pcOther) {
+  if (iStartIndex < 0 || iStartIndex > size)
+    return;
+
+  int newSize = size + pcOther.size;
+  int* newTable = new int[newSize];
+
+  for (int i = 0; i < iStartIndex; i++)
+    newTable[i] = table[i];
+
+  for (int i = 0; i < pcOther.size; i++)
+    newTable[iStartIndex + i] = pcOther.table[i];
+
+  for (int i = iStartIndex; i < size; i++)
+    newTable[pcOther.size + i] = table[i];
+
+  delete[] table;
+  table = newTable;
+  size = newSize;
+}
+
+void CTable::setTableValue(int index, int value) const {
+  if (index >= 0 && index < size) {
+    table[index] = value;
+  }
+}
+
+void CTable::print() const {
+  cout << "Nazwa: " << s_name << ", Rozmiar: " << size << ", Elementy: ";
+  for (int i = 0; i < size; i++)
+    cout << table[i] << " ";
+  cout << endl;
 }

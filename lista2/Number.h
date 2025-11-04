@@ -16,6 +16,12 @@ public:
   Number& operator=(int value);
 
   friend std::ostream& operator<<(std::ostream &os, const Number &number);
+  std::string toString() const;
+
+  Number add(const Number &other) const;
+  Number subtract(const Number &other) const;
+  Number multiply(const Number &other) const;
+  Number devide(const Number &other) const;
 
   Number operator+(const Number &other) const;
   Number operator-(const Number &other) const;
@@ -36,6 +42,7 @@ private:
 
   static int calcLength(int value);
   static void reverseTable(int *tempTable, int size);
+  bool isGreater(const Number &other) const;
   void copyData(const int *newTable, int newLength, bool newIsNegative);
 };
 
