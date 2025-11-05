@@ -14,6 +14,7 @@ public:
 
   Number& operator=(const Number &other);
   Number& operator=(int value);
+  Number operator-() const;
 
   friend std::ostream& operator<<(std::ostream &os, const Number &number);
   std::string toString() const;

@@ -54,6 +54,12 @@ Number& Number::operator=(int value) {
   return *this;
 }
 
+Number Number::operator-() const {
+  Number copy = *this;
+  copy.isNegative = !copy.isNegative;
+  return copy;
+}
+
 Number::Number(const Number &other) {
   copyData(other.table, other.length, other.isNegative);
 }
@@ -155,7 +161,41 @@ Number Number::subtract(const Number &other) const {
 }
 
 Number Number::multiply(const Number &other) const {
-  return Number(0);
+  if ((this->length == 1 && this->table[0] == 0) ||
+      (other.length == 1 && other.table[0] == 0))
+    return Number(0);
+
+  bool resultIsNegative = this->isNegative ^ other.isNegative;
+  int m = this->length;
+  int n = other.length;
+  int resultSize = m + n;
+  int *resultTable = new int[resultSize]();
+
+  for (int i = m + n - 1; i >= 0; i--)
+    resultTable[i] = 0;
+
+  for (int i = m - 1; i >= 0; i--)
+    for (int j = n - 1; j >= 0; j--) {
+      int product = this->table[i] * other.table[j];
+      int pos = (m - 1 - i) + (n - 1 - j);
+      resultTable[pos] += product;
+    }
+
+  int carry = 0;
+  for (int i = 0; i < resultSize; i++) {
+    int sum = resultTable[i] + carry;
+    resultTable[i] = sum % 10;
+    carry = sum / 10;
+  }
+
+  int actualSize = resultSize;
+  while (actualSize > 1 && resultTable[actualSize - 1] == 0)
+    actualSize--;
+
+  reverseTable(resultTable, actualSize);
+  Number result(resultTable, actualSize, resultIsNegative);
+  delete[] resultTable;
+  return Number(resultTable, actualSize, resultIsNegative);
 }
 
 Number Number::devide(const Number &other) const {
@@ -203,7 +243,7 @@ Number Number::operator-(const Number &other) const {
 }
 
 Number Number::operator*(const Number &other) const {
-
+  return this->multiply(other);
 }
 
 Number Number::operator/(const Number &other) const {

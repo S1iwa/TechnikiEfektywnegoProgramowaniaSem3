@@ -27,4 +27,6 @@ int main() {
   std::cout << (n500 - n5) << std::endl;
   std::cout << (n500 + n500) << std::endl;
   std::cout << (n500 - n500) << std::endl;
+  std::cout << (n2 * n5) << std::endl;
+  std::cout << (n500 * (-n1)) << std::endl;
 }
