@@ -8,11 +8,11 @@
 
 class Number {
 public:
-  explicit Number(int value);
- Number(const Number &other);
+  Number(int value);
+  Number(const Number &other);
   ~Number();
 
-  Number& operator=(Number other);
+  Number& operator=(const Number &other);
   Number& operator=(int value);
   Number operator-() const;
 
@@ -43,7 +43,6 @@ private:
 
   Number addHelper(const Number &other) const;
   Number subtractHelper(const Number &other) const;
-  Number divideHelper(const Number &other) const;
 
   static int calcLength(int value);
   static void reverseTable(int *tempTable, int size);

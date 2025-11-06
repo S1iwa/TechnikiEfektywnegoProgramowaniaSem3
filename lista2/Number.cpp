@@ -13,7 +13,6 @@ Number::Number(int value) {
   table = new int[length];
 
   if (value < 0) {
-    value = -value;
     isNegative = true;
   } else {
     isNegative = false;
@@ -25,7 +24,8 @@ Number::Number(int value) {
   }
 
   for (int i = length - 1; i >= 0; --i) {
-    table[i] = value % 10;
+    int digit = value % 10;
+    table[i] = (digit < 0) ? -digit : digit;
     value /= 10;
   }
 }
@@ -40,7 +40,7 @@ Number::~Number() {
   delete[] table;
 }
 
-Number& Number::operator=(Number other) {
+Number& Number::operator=(const Number &other) {
   if (this != &other) {
     delete[] table;
     copyData(other.table, other.length, other.isNegative);
@@ -49,14 +49,15 @@ Number& Number::operator=(Number other) {
 }
 
 Number& Number::operator=(int value) {
-  delete [] table;
+  // Number1 = number2 już usuwa tabelę, więc nie muszę tutaj, żeby dwa razy nie zwalniać
   *this = Number(value);
   return *this;
 }
 
 Number Number::operator-() const {
   Number copy = *this;
-  copy.isNegative = !copy.isNegative;
+  if (!isZero())
+    copy.isNegative = !copy.isNegative;
   return copy;
 }
 
@@ -152,13 +153,9 @@ Number Number::subtractHelper(const Number &other) const {
   while (zeros < index - 1 && tempTable[zeros] == 0)
     zeros++;
 
-  Number result(tempTable, index - zeros, willBeNegative);
+  Number result(tempTable + zeros, index - zeros, willBeNegative);
   delete[] tempTable;
   return result;
-}
-
-Number Number::divideHelper(const Number &other) const {
-  return Number(0);
 }
 
 /* OPERATORY MATEMATYCZNE */
