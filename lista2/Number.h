@@ -49,6 +49,9 @@ private:
   static void reverseTable(int *tempTable, int size);
   bool isGreater(const Number &other) const;
   bool isGreaterOrEqualMagnitude(const Number &other) const;
+  bool isZero() const;
+  void internalAppend(int digit);
+  void internalSubtract(const Number &other);
   void copyData(const int *newTable, int newLength, bool newIsNegative);
 };
 

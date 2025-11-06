@@ -72,7 +72,7 @@ std::ostream& operator<<(std::ostream &os, const Number &number) {
 }
 
 std::string Number::toString() const {
-  if (length == 1 && table[0] == 0)
+  if (isZero())
     return "0";
   std::string result;
   if (isNegative)
@@ -203,8 +203,7 @@ Number Number::subtract(const Number &other) const {
 }
 
 Number Number::multiply(const Number &other) const {
-  if ((this->length == 1 && this->table[0] == 0) ||
-      (other.length == 1 && other.table[0] == 0))
+  if (isZero() || other.isZero())
     return Number(0);
 
   bool resultIsNegative = this->isNegative ^ other.isNegative;
@@ -239,26 +238,44 @@ Number Number::multiply(const Number &other) const {
 }
 
 Number Number::divide(const Number &other) const {
-  if (other.length == 1 && other.table[0] == 0)
+  if (other.isZero())
     throw std::invalid_argument("Division by zero is not allowed.");
 
-  if (this->length == 1 && this->table[0] == 0)
+  if (isZero())
     return Number(0);
 
-  if (isGreaterOrEqualMagnitude(other))
+  if (!isGreaterOrEqualMagnitude(other))
     return Number(0);
 
   bool resultIsNegative = this->isNegative ^ other.isNegative;
 
   Number reminder(0);
+  Number absOther = other;
+  absOther.isNegative = false;
+
   int *quotientTable = new int[this->length];
   int quotientIndex = 0;
 
   for (int i = 0; i < this->length; ++i) {
-    //reminder.appendDigit(this->table[i]);
+    reminder.internalAppend(table[i]);
+    int count = 0;
+
+    while (reminder.isGreaterOrEqualMagnitude(absOther)) {
+      reminder.internalSubtract(absOther);
+      count++;
+    }
+
+    quotientTable[quotientIndex++] = count;
   }
 
-  return Number(0);
+  int zeros = 0;
+  while (zeros < quotientIndex - 1 && quotientTable[zeros] == 0)
+    zeros++;
+  int finalLength = quotientIndex - zeros;
+
+  Number result(quotientTable + zeros, finalLength, resultIsNegative);
+  delete[] quotientTable;
+  return result;
 }
 
 /* OPERATORY ARYTMETYCZNE */
@@ -355,6 +372,63 @@ bool Number::isGreaterOrEqualMagnitude(const Number &other) const {
   }
 
   return true;
+}
+
+bool Number::isZero() const {
+  return (this->length == 1 && this->table[0] == 0);
+}
+
+void Number::internalAppend(int digit) {
+  if (isZero()) {
+    this->table[0] = digit;
+    return;
+  }
+
+  int *newTable = new int[this->length + 1];
+  for (int i = 0; i < this->length; ++i)
+    newTable[i] = this->table[i];
+  newTable[this->length] = digit;
+
+  delete[] this->table;
+  this->table = newTable;
+  this->length++;
+}
+
+void Number::internalSubtract(const Number &other) {
+  int borrow = 0;
+  int i = this->length - 1;
+  int j = other.length - 1;
+
+  while (i >= 0) {
+    int digit1 = this->table[i];
+    int digit2 = (j >= 0) ? other.table[j] : 0;
+
+    digit1 -= borrow;
+    if (digit1 < digit2) {
+      digit1 += 10;
+      borrow = 1;
+    } else {
+      borrow = 0;
+    }
+
+    this->table[i] = digit1 - digit2;
+    i--;
+    j--;
+  }
+
+  int zeros = 0;
+  while (zeros < this->length - 1 && this->table[zeros] == 0)
+    zeros++;
+
+  if (zeros > 0) {
+    int newLength = this->length - zeros;
+    int *newTable = new int[newLength];
+    for (int k = 0; k < newLength; ++k)
+      newTable[k] = this->table[k + zeros];
+    delete[] this->table;
+    this->table = newTable;
+    this->length = newLength;
+  }
 }
 
 void Number::copyData(const int *newTable, int newLength, bool newIsNegative) {
