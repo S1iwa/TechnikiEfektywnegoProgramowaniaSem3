@@ -1,5 +1,5 @@
 //
-// Created by micha on 10/26/2025.
+// Created by S1iwa on 10/26/2025.
 //
 
 #include "Number.h"
@@ -40,7 +40,7 @@ Number::~Number() {
   delete[] table;
 }
 
-Number& Number::operator=(const Number &other) {
+Number& Number::operator=(Number other) {
   if (this != &other) {
     delete[] table;
     copyData(other.table, other.length, other.isNegative);
@@ -67,27 +67,24 @@ Number::Number(const Number &other) {
 /* OPERATORY STRUMIENIOWE */
 
 std::ostream& operator<<(std::ostream &os, const Number &number) {
-  if (number.isNegative)
-    os << '-';
-  else
-    os << '+';
-  for (int i = 0; i < number.length; ++i)
-    os << number.table[i];
+  os << number.toString();
   return os;
 }
 
 std::string Number::toString() const {
+  if (length == 1 && table[0] == 0)
+    return "0";
   std::string result;
   if (isNegative)
     result += '-';
   for (int i = 0; i < length; ++i)
-    result += static_cast<char>(table[i]);
+    result += static_cast<char>(table[i] + '0');
   return result;
 }
 
-/* OPERATORY MATEMATYCZNE */
+/* HELPERY MATEMATYCZNE */
 
-Number Number::add(const Number &other) const {
+Number Number::addHelper(const Number &other) const {
   int maxLength = (length > other.length) ? length : other.length;
 
   int carry = 0;
@@ -115,7 +112,7 @@ Number Number::add(const Number &other) const {
   return result;
 }
 
-Number Number::subtract(const Number &other) const {
+Number Number::subtractHelper(const Number &other) const {
   int borrow = 0;
   bool willBeNegative = true;
 
@@ -160,6 +157,51 @@ Number Number::subtract(const Number &other) const {
   return result;
 }
 
+Number Number::divideHelper(const Number &other) const {
+  return Number(0);
+}
+
+/* OPERATORY MATEMATYCZNE */
+
+Number Number::add(const Number &other) const {
+  // A + B
+  if (!this->isNegative && !other.isNegative)
+    return this->addHelper(other);
+
+  // A + (-B) = A - B
+  if (!this->isNegative && other.isNegative)
+    return this->subtractHelper(other);
+
+  // (-A) + B = B - A
+  if (this->isNegative && !other.isNegative)
+    return other.subtractHelper(*this);
+
+  // (-A) + (-B) = -(A + B)
+  Number result = this->addHelper(other);
+  result.isNegative = true;
+  return result;
+}
+
+Number Number::subtract(const Number &other) const {
+  // A - (-B) = A + B
+  if (!this->isNegative && other.isNegative)
+    return this->addHelper(other);
+
+  // A - B
+  if (!this->isNegative && !other.isNegative)
+    return this->subtractHelper(other);
+
+  // (-A) - (-B) = B - A
+  if (this->isNegative && other.isNegative)
+    return other.subtractHelper(*this);
+
+  // (-A) - B = -(A + B)
+  Number result = this->addHelper(other);
+  result.isNegative = true;
+  return result;
+
+}
+
 Number Number::multiply(const Number &other) const {
   if ((this->length == 1 && this->table[0] == 0) ||
       (other.length == 1 && other.table[0] == 0))
@@ -170,9 +212,6 @@ Number Number::multiply(const Number &other) const {
   int n = other.length;
   int resultSize = m + n;
   int *resultTable = new int[resultSize]();
-
-  for (int i = m + n - 1; i >= 0; i--)
-    resultTable[i] = 0;
 
   for (int i = m - 1; i >= 0; i--)
     for (int j = n - 1; j >= 0; j--) {
@@ -193,53 +232,43 @@ Number Number::multiply(const Number &other) const {
     actualSize--;
 
   reverseTable(resultTable, actualSize);
+
   Number result(resultTable, actualSize, resultIsNegative);
   delete[] resultTable;
-  return Number(resultTable, actualSize, resultIsNegative);
+  return result;
 }
 
-Number Number::devide(const Number &other) const {
+Number Number::divide(const Number &other) const {
+  if (other.length == 1 && other.table[0] == 0)
+    throw std::invalid_argument("Division by zero is not allowed.");
+
+  if (this->length == 1 && this->table[0] == 0)
+    return Number(0);
+
+  if (isGreaterOrEqualMagnitude(other))
+    return Number(0);
+
+  bool resultIsNegative = this->isNegative ^ other.isNegative;
+
+  Number reminder(0);
+  int *quotientTable = new int[this->length];
+  int quotientIndex = 0;
+
+  for (int i = 0; i < this->length; ++i) {
+    //reminder.appendDigit(this->table[i]);
+  }
+
   return Number(0);
 }
 
 /* OPERATORY ARYTMETYCZNE */
 
-Number Number::operator+(const Number &other) const {
-  // A + B
-  if (!this->isNegative && !other.isNegative)
-    return this->add(other);
-
-  // A + (-B) = A - B
-  if (!this->isNegative && other.isNegative)
-    return this->subtract(other);
-
-  // (-A) + B = B - A
-  if (this->isNegative && !other.isNegative)
-    return other.subtract(*this);
-
-  // (-A) + (-B) = -(A + B)
-  Number result = this->add(other);
-  result.isNegative = true;
-  return result;
+Number Number::operator+(const Number& other) const {
+  return this->add(other);
 }
 
 Number Number::operator-(const Number &other) const {
-  // A - (-B) = A + B
-  if (!this->isNegative && other.isNegative)
-    return this->add(other);
-
-  // A - B
-  if (!this->isNegative && !other.isNegative)
-    return this->subtract(other);
-
-  // (-A) - (-B) = B - A
-  if (this->isNegative && other.isNegative)
-    return other.subtract(*this);
-
-  // (-A) - B = -(A + B)
-  Number result = this->add(other);
-  result.isNegative = true;
-  return result;
+  return this->subtract(other);
 }
 
 Number Number::operator*(const Number &other) const {
@@ -247,7 +276,7 @@ Number Number::operator*(const Number &other) const {
 }
 
 Number Number::operator/(const Number &other) const {
-
+  return this->divide(other);
 }
 
 /* OPERATORY ARYTMETYCZNE Z INT */
@@ -310,6 +339,22 @@ bool Number::isGreater(const Number &other) const {
   }
 
   return false;
+}
+
+bool Number::isGreaterOrEqualMagnitude(const Number &other) const {
+  if (this->length > other.length)
+    return true;
+  if (this->length < other.length)
+    return false;
+
+  for (int i = 0; i < this->length; ++i) {
+    if (this->table[i] > other.table[i])
+      return true;
+    if (this->table[i] < other.table[i])
+      return false;
+  }
+
+  return true;
 }
 
 void Number::copyData(const int *newTable, int newLength, bool newIsNegative) {

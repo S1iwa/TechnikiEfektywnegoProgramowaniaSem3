@@ -1,5 +1,5 @@
 //
-// Created by micha on 10/26/2025.
+// Created by S1iwa on 10/26/2025.
 //
 
 #include "Tester.h"
@@ -21,6 +21,12 @@ int main() {
   Number n400(400);
   Number n500(500);
 
+  Number n1000000(1000000);
+  Number n2000000(2000000);
+  Number n3000000(3000000);
+  Number n4000000(4000000);
+  Number n5000000(5000000);
+
   std::cout << (n5 - n4) << std::endl;
   std::cout << (n1 - n3 - n5) << std::endl;
   std::cout << (n5 - n5 - n5 + n5) << std::endl;
@@ -29,4 +35,7 @@ int main() {
   std::cout << (n500 - n500) << std::endl;
   std::cout << (n2 * n5) << std::endl;
   std::cout << (n500 * (-n1)) << std::endl;
+  std::cout << (-n500) << std::endl;
+  std::cout << (-n500 * -n3) << std::endl;
+  std::cout << (n5000000 * n5000000 * n5000000 * n5000000 * n5000000) << std::endl;
 }

@@ -1,5 +1,5 @@
 //
-// Created by micha on 10/26/2025.
+// Created by S1iwa on 10/26/2025.
 //
 
 #ifndef TEPSEM3_NUMBER_H
@@ -9,10 +9,10 @@
 class Number {
 public:
   explicit Number(int value);
-  Number(const Number &other);
+ Number(const Number &other);
   ~Number();
 
-  Number& operator=(const Number &other);
+  Number& operator=(Number other);
   Number& operator=(int value);
   Number operator-() const;
 
@@ -22,9 +22,9 @@ public:
   Number add(const Number &other) const;
   Number subtract(const Number &other) const;
   Number multiply(const Number &other) const;
-  Number devide(const Number &other) const;
+  Number divide(const Number &other) const;
 
-  Number operator+(const Number &other) const;
+  Number operator+(const Number& other) const;
   Number operator-(const Number &other) const;
   Number operator*(const Number &other) const;
   Number operator/(const Number &other) const;
@@ -41,9 +41,14 @@ private:
 
   Number(const int* table, int length, bool isNegative);
 
+  Number addHelper(const Number &other) const;
+  Number subtractHelper(const Number &other) const;
+  Number divideHelper(const Number &other) const;
+
   static int calcLength(int value);
   static void reverseTable(int *tempTable, int size);
   bool isGreater(const Number &other) const;
+  bool isGreaterOrEqualMagnitude(const Number &other) const;
   void copyData(const int *newTable, int newLength, bool newIsNegative);
 };
 
