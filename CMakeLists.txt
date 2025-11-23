@@ -26,3 +26,12 @@ add_executable(lista2
         lista2/Tester.cpp
         lista2/Tester.h
 )
+add_executable(lista3
+        lista3/Tree/Tree.cpp
+        lista3/Tree/Tree.h
+        lista3/Tree/Node.cpp
+        lista3/Tree/Node.h
+        lista3/Tester.cpp
+        lista3/Tester.h
+        lista3/Interface.cpp
+        lista3/Interface.h)
