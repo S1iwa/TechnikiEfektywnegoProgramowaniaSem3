@@ -14,6 +14,8 @@ class Tree {
 public:
   void build(std::vector<std::string>& args) const;
   void print() const;
+  double evaluate(std::vector<std::string>& args) const;
+  std::vector<std::string>* getNodesWithVariables() const;
   Tree();
   ~Tree();
   Node* root;

@@ -10,7 +10,7 @@
 
 class Node {
 public:
-  Node() : parent(NULL) {};
+  Node();
   ~Node();
 
   void setValue(const std::string& val);
@@ -18,13 +18,19 @@ public:
 
   void build(std::vector<std::string>& args);
   void print() const;
+  bool isVariable() const;
+  void evaluate(double *result, std::vector<std::string>& args) const;
 
-private:
+  void getVariables(std::vector<std::string>* vars);
+
+  bool operator==(const Node& other) const;
+
+ private:
   std::string value;
   std::vector<Node*> children;
-  Node* parent;
 
   int getRequiredArguments() const;
+  static double toDouble(const std::string& str) ;
 };
 
 #endif  // TEPSEM3_NODE_H

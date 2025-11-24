@@ -60,6 +60,9 @@ void Interface::command_enter(std::vector<std::string>& args) {
     std::cout << "No expression provided." << std::endl;
     return;
   }
+
+  delete tree.root;
+  tree.root = new Node();
   tree.build(args);
   std::cout << "Expression entered." << std::endl;
 }
@@ -75,11 +78,21 @@ void Interface::command_help(std::vector<std::string>& args) {
   std::cout << "  exit - Exit the program" << std::endl;
 }
 
-void Interface::command_vars(std::vector<std::string>& args) {}
+void Interface::command_vars(std::vector<std::string>& args) {
+  std::cout << "Variables in the expression: ";
+  std::vector<std::string>* vars = tree.getNodesWithVariables();
+  for (int i = 0; i < vars->size(); ++i)
+    std::cout << vars->at(i) << " ";
+  std::cout << std::endl;
+  delete vars;
+}
 
 void Interface::command_print(std::vector<std::string>& args) {
   tree.print();
 }
 
-void Interface::command_comp(std::vector<std::string>& args) {}
+void Interface::command_comp(std::vector<std::string>& args) {
+  std::cout << "Result: " << tree.evaluate(args) << std::endl;
+}
+
 void Interface::command_join(std::vector<std::string>& args) {}
