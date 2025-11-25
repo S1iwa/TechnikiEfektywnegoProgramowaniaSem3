@@ -7,12 +7,20 @@
 
 #include <iostream>
 
-void Tree::build(std::vector<std::string>& args) const {
+Tree::Tree() {
+  root = new Node();
+}
+
+Tree::~Tree() {
+  delete root;
+}
+
+bool Tree::build(std::vector<std::string>& args) {
   std::cout << "Building tree with args:";
   for (int i = 0; i < args.size(); ++i)
     std::cout << " " << args[i];
   std::cout << std::endl;
-  root->build(args);
+  return root->build(args);
 }
 
 void Tree::print() const {
@@ -20,27 +28,7 @@ void Tree::print() const {
   std::cout << std::endl;
 }
 
-Tree::~Tree() {
-  delete root;
-}
-
-Tree::Tree() {
-  root = new Node();
-}
-
-double Tree::evaluate(std::vector<std::string>& args) const {
-  double result = 0;
-  root->evaluate(&result, args);
-  return result;
-}
-
-  std::vector<std::string>* Tree::getNodesWithVariables() const {
-  std::vector<std::string> *vars = new std::vector<std::string>();
-  root->getVariables(vars);
-  return vars;
-}
-
-void Tree::join(const Tree& other) const {
+void Tree::join(const Tree& other) {
   if (this->root == NULL || other.root == NULL) {
     std::cout << "Cannot join trees: one of the roots is null." << std::endl;
     return;
@@ -57,12 +45,6 @@ bool Tree::operator==(const Tree& other) const {
   return (*this->root == *other.root);
 }
 
-Tree Tree::operator+(const Tree& other) {
-  Tree result = *this;
-  result.join(other);
-  return result;
-}
-
 Tree& Tree::operator=(const Tree& other) {
   if (this != &other) {
     delete this->root;
@@ -75,4 +57,20 @@ Tree& Tree::operator=(const Tree& other) {
 Tree::Tree(const Tree& other) {
   root = new Node();
   *root = *other.root;
+}
+
+double Tree::evaluate(std::map<std::string, double>& values) const {
+  return root->evaluate(values);
+}
+
+std::vector<std::string>* Tree::getNodesWithVariables() const {
+  std::vector<std::string> *vars = new std::vector<std::string>();
+  root->getVariables(vars);
+  return vars;
+}
+
+Tree Tree::operator+(const Tree& other) {
+  Tree result = *this;
+  result.join(other);
+  return result;
 }

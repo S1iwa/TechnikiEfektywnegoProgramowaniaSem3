@@ -5,8 +5,9 @@
 #include "Interface.h"
 
 #include <iostream>
-#include <string>
 #include <map>
+#include <sstream>
+#include <string>
 
 Interface::Interface() {
   command_map["exit"] = &Interface::command_exit;
@@ -61,10 +62,13 @@ void Interface::command_enter(std::vector<std::string>& args) {
     return;
   }
 
-  delete tree.root;
-  tree.root = new Node();
-  tree.build(args);
-  std::cout << "Expression entered." << std::endl;
+  tree = Tree();
+  if(tree.build(args))
+    std::cout << "Expression built successfully." << std::endl;
+  else {
+    std::cout << "Expression had to be modified to be valid." << std::endl;
+    tree.print();
+  }
 }
 
 void Interface::command_help(std::vector<std::string>& args) {
@@ -92,7 +96,21 @@ void Interface::command_print(std::vector<std::string>& args) {
 }
 
 void Interface::command_comp(std::vector<std::string>& args) {
-  std::cout << "Result: " << tree.evaluate(args) << std::endl;
+  std::vector<std::string>* vars = tree.getNodesWithVariables();
+  if (args.size() < vars->size())
+    std::cout << "Not enough arguments provided to compute the expression." << std::endl;
+  else if (args.size() > vars->size())
+    std::cout << "More arguments provided than needed. Extra arguments will be ignored." << std::endl;
+
+  std::map<std::string, double> values;
+  for (int i = 0; i < vars->size(); ++i)
+    if (i < args.size())
+      values[vars->at(i)] = toDouble(args[i]);
+    else
+      values[vars->at(i)] = 1.0;
+
+  delete vars;
+  std::cout << "Result: " << tree.evaluate(values) << std::endl;
 }
 
 void Interface::command_join(std::vector<std::string>& args) {
@@ -103,6 +121,26 @@ void Interface::command_join(std::vector<std::string>& args) {
 
   Tree other_tree;
   other_tree.build(args);
-  tree.join(other_tree);
+  tree = tree + other_tree;
   std::cout << "Expressions joined." << std::endl;
+}
+
+double Interface::toDouble(const std::string& str) {
+  try {
+    for (int i = 0; i < str.size(); ++i)
+      if ((str[i] < '0' || str[i] > '9') && str[i] != '.')
+        throw std::invalid_argument("Not a number");
+  } catch (std::invalid_argument& e) {
+    std::cout << "Error converting string to double: " << e.what() << std::endl;
+    return 0.0;
+  }
+
+  std::stringstream ss(str);
+  double result;
+  if (ss >> result)
+    return result;
+  else {
+    std::cout << "Error converting string to double." << std::endl;
+    return 0.0;
+  }
 }

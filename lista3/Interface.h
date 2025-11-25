@@ -18,6 +18,7 @@ public:
   void run();
   Tree tree;
 
+  static double toDouble(const std::string& str);
 private:
   typedef void (Interface::*CommandFunction)(std::vector<std::string>&);
   std::map<std::string, CommandFunction> command_map;

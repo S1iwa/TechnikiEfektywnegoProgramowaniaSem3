@@ -3,11 +3,11 @@
 //
 
 #include "Node.h"
+#include "../Interface.h"
 
+#include <cmath>
 #include <algorithm>
 #include <iostream>
-#include <sstream>
-#include <math.h>
 
 Node::Node() {}
 
@@ -15,94 +15,6 @@ Node::~Node() {
   for (int i = 0; i < children.size(); ++i)
     delete children[i];
   children.clear();
-}
-
-int Node::getRequiredArguments() const {
-  if (value == "+" || value == "-" || value == "*" || value == "/")
-    return 2;
-  else if (value == "sin" || value == "cos")
-    return 1;
-  return 0;
-}
-
-void Node::build(std::vector<std::string>& args) {
-  if (!args.empty()) {
-    setValue(args[0]);
-    args.erase(args.begin());
-  } else {
-    std::cout << "No more arguments available, setting default value '1'" << std::endl;
-    setValue("1");
-  }
-
-  int required_args = getRequiredArguments();
-    for (int i = 0; i < required_args; ++i) {
-      Node* child = new Node();
-      child->build(args);
-      children.push_back(child);
-    }
-}
-
-void Node::setValue(const std::string& val) {
-  value = val;
-}
-
-std::string Node::getValue() const {
-  return value;
-}
-
-void Node::print() const {
-  std::cout << value << " ";
-  for (int i = 0; i < children.size(); ++i)
-    children[i]->print();
-}
-
-void Node::evaluate(double *result, std::vector<std::string>& args) const {
-  if (isVariable()) {
-    if (!args.empty()) {
-      *result += args.begin()->empty() ? 1.0 : toDouble(args[0]);
-      args.erase(args.begin());
-    } else {
-      std::cout << "No more arguments available for variable, using default value 1.0" << std::endl;
-      *result += 1.0;
-    }
-  } else {
-  std::vector<double> child_results;
-  for (int i = 0; i < children.size(); ++i) {
-    double child_result = 0.0;
-    children[i]->evaluate(&child_result, args);
-    child_results.push_back(child_result);
-  }
-
-  if (value == "+")
-    *result += child_results[0] + child_results[1];
-  else if (value == "-")
-    *result += child_results[0] - child_results[1];
-  else if (value == "*")
-    *result += child_results[0] * child_results[1];
-  else if (value == "/")
-    *result += child_results[0] / child_results[1];
-  else if (value == "sin") {
-    std::cout << "Calculating sin of " << child_results[0] << std::endl;
-    *result += sin(child_results[0]);
-  } else if (value == "cos")
-    *result += cos(child_results[0]);
-  else
-    *result += toDouble(value);
-  }
-}
-
-void Node::getVariables(std::vector<std::string>* vars) {
-  if (isVariable())
-    if (std::find(vars->begin(), vars->end(), value) == vars->end())
-      vars->push_back(value);
-  for (int i = 0; i < children.size(); ++i)
-    children[i]->getVariables(vars);
-}
-
-bool Node::isVariable() const {
-  return (getRequiredArguments() == 0
-            && !(value == "sin" || value == "cos")
-            && !(value[0] >= '0' && value[0] <= '9'));
 }
 
 bool Node::operator==(const Node& other) const {
@@ -117,29 +29,6 @@ bool Node::operator==(const Node& other) const {
       return false;
 
   return true;
-}
-
-double Node::toDouble(const std::string& str) {
-  try {
-    for (int i = 0; i < str.size(); ++i)
-      if ((str[i] < '0' || str[i] > '9') && str[i] != '.')
-        throw std::invalid_argument("Not a number");
-  } catch (std::invalid_argument& e) {
-    std::cout << "Error converting string to double: " << e.what() << std::endl;
-    return 0.0;
-  }
-
-  std::stringstream ss(str);
-  double result;
-  if (ss >> result)
-    return result;
-  else {
-    std::cout << "Error converting string to double." << std::endl;
-    return 0.0;
-  }
-}
-std::vector<Node*> Node::getChildren() const {
-  return children;
 }
 
 Node& Node::operator=(const Node& other) {
@@ -161,4 +50,102 @@ Node& Node::operator=(const Node& other) {
 
 Node::Node(const Node& other) {
   *this = other;
+}
+
+bool Node::build(std::vector<std::string>& args) {
+  bool flag = true;
+  if (!args.empty()) {
+    setValue(args[0]);
+    args.erase(args.begin());
+  } else {
+    flag = false;
+    std::cout << "No more arguments available, setting default value '1'" << std::endl;
+    setValue("1");
+  }
+
+  int required_args = getRequiredArguments();
+    for (int i = 0; i < required_args; ++i) {
+      Node* child = new Node();
+      if(!child->build(args))
+        flag = false;
+      children.push_back(child);
+    }
+  return flag;
+}
+
+void Node::print() const {
+  std::cout << value << " ";
+  for (int i = 0; i < children.size(); ++i)
+    children[i]->print();
+}
+
+double Node::evaluate(std::map<std::string, double>& values) const {
+  if (isVariable()) {
+    if (values.find(value) != values.end()) {
+      return values[value];
+    } else {
+      std::cout << "No more arguments available for variable, using default value 1.0" << std::endl;
+      return 1.0;
+    }
+  }
+
+  if (getRequiredArguments() == 0)
+    return Interface::toDouble(value);
+
+  std::vector<double> child_results;
+  child_results.reserve(children.size());
+  for (int i = 0; i < children.size(); ++i)
+    child_results.push_back(children[i]->evaluate(values));
+
+  if (value == "+")
+    return child_results[0] + child_results[1];
+  if (value == "-")
+    return child_results[0] - child_results[1];
+  if (value == "*")
+    return child_results[0] * child_results[1];
+  if (value == "/") {
+    if (child_results[1] == 0) {
+      std::cout << "Division by zero encountered. Dividing variable by 1.0" << std::endl;
+      return child_results[0];
+    }
+    return child_results[0] / child_results[1];
+  }
+  if (value == "sin") return sin(child_results[0]);
+  if (value == "cos") return cos(child_results[0]);
+  return 0.0;
+}
+
+void Node::getVariables(std::vector<std::string>* vars) {
+  if (isVariable())
+    if (std::find(vars->begin(), vars->end(), value) == vars->end())
+      vars->push_back(value);
+  for (int i = 0; i < children.size(); ++i)
+    children[i]->getVariables(vars);
+}
+
+bool Node::isVariable() const {
+  return getRequiredArguments() == 0
+            && !(value == "sin" || value == "cos")
+            && !(value[0] >= '0' && value[0] <= '9')
+            && !value.empty();
+}
+
+void Node::setValue(const std::string& val) {
+  value = val;
+}
+
+std::string Node::getValue() const {
+  return value;
+}
+
+std::vector<Node*> Node::getChildren() const {
+  return children;
+}
+
+int Node::getRequiredArguments() const {
+  if (value == "+" || value == "-" || value == "*" || value == "/")
+    return 2;
+  else if (value == "sin" || value == "cos")
+    return 1;
+  return 0;
 }

@@ -12,17 +12,24 @@
 
 class Tree {
 public:
-  void build(std::vector<std::string>& args) const;
-  void print() const;
-  void join(const Tree& other) const;
-  bool operator==(const Tree& other) const;
-  Tree& operator=(const Tree& other);
-  Tree operator+(const Tree& other);
-  double evaluate(std::vector<std::string>& args) const;
-  std::vector<std::string>* getNodesWithVariables() const;
   Tree();
   ~Tree();
+
+  bool operator==(const Tree& other) const;
+  Tree& operator=(const Tree& other);
   Tree(const Tree& other);
+
+  // Zwraca false, jeżeli musiano modyfikować, aby było poprawne
+  bool build(std::vector<std::string>& args);
+  void print() const;
+  void join(const Tree& other);
+  double evaluate(std::map<std::string, double>& values) const;
+
+  std::vector<std::string>* getNodesWithVariables() const;
+
+  Tree operator+(const Tree& other);
+
+private:
   Node* root;
 };
 
