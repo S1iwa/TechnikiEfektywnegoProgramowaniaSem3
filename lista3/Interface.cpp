@@ -95,4 +95,14 @@ void Interface::command_comp(std::vector<std::string>& args) {
   std::cout << "Result: " << tree.evaluate(args) << std::endl;
 }
 
-void Interface::command_join(std::vector<std::string>& args) {}
+void Interface::command_join(std::vector<std::string>& args) {
+  if (args.empty()) {
+    std::cout << "No expression provided to join." << std::endl;
+    return;
+  }
+
+  Tree other_tree;
+  other_tree.build(args);
+  tree.join(other_tree);
+  std::cout << "Expressions joined." << std::endl;
+}

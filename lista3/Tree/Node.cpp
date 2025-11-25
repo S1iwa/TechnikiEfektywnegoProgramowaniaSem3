@@ -47,7 +47,7 @@ void Node::setValue(const std::string& val) {
 }
 
 std::string Node::getValue() const {
-  return std::string();
+  return value;
 }
 
 void Node::print() const {
@@ -106,7 +106,17 @@ bool Node::isVariable() const {
 }
 
 bool Node::operator==(const Node& other) const {
-  return this->value == other.value;
+  if (this->value != other.value)
+    return false;
+
+  if (this->children.size() != other.children.size())
+    return false;
+
+  for (size_t i = 0; i < this->children.size(); ++i)
+    if (!(*this->children[i] == *other.children[i]))
+      return false;
+
+  return true;
 }
 
 double Node::toDouble(const std::string& str) {
@@ -127,4 +137,28 @@ double Node::toDouble(const std::string& str) {
     std::cout << "Error converting string to double." << std::endl;
     return 0.0;
   }
+}
+std::vector<Node*> Node::getChildren() const {
+  return children;
+}
+
+Node& Node::operator=(const Node& other) {
+  if (this != &other) {
+    this->value = other.value;
+
+    for (int i = 0; i < this->children.size(); ++i)
+      delete this->children[i];
+    this->children.clear();
+
+    for (int i = 0; i < other.children.size(); ++i) {
+      Node* newChild = new Node();
+      *newChild = *other.children[i];
+      this->children.push_back(newChild);
+    }
+  }
+  return *this;
+}
+
+Node::Node(const Node& other) {
+  *this = other;
 }

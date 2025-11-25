@@ -22,14 +22,17 @@ public:
   void evaluate(double *result, std::vector<std::string>& args) const;
 
   void getVariables(std::vector<std::string>* vars);
+  int getRequiredArguments() const;
+  std::vector<Node*> getChildren() const;
 
   bool operator==(const Node& other) const;
+  Node& operator=(const Node& other);
+  Node(const Node& other);
 
  private:
   std::string value;
   std::vector<Node*> children;
 
-  int getRequiredArguments() const;
   static double toDouble(const std::string& str) ;
 };
 
