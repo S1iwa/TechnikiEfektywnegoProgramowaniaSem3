@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(TEPsem3)
 
-set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(zad1
@@ -35,3 +35,6 @@ add_executable(lista3
         lista3/Tester.h
         lista3/Interface.cpp
         lista3/Interface.h)
+add_executable(lista4 lista4/Error.cpp lista4/Error.h
+        lista4/Result.cpp
+        lista4/Result.h)
