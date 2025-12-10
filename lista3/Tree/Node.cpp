@@ -59,7 +59,7 @@ bool Node::build(std::vector<std::string>& args) {
     args.erase(args.begin());
   } else {
     flag = false;
-    std::cout << "No more arguments available, setting default value '1'" << std::endl;
+    //std::cout << "No more arguments available, setting default value 1.0" << std::endl;
     setValue("1");
   }
 
@@ -81,12 +81,10 @@ void Node::print() const {
 
 double Node::evaluate(std::map<std::string, double>& values) const {
   if (isVariable()) {
-    if (values.find(value) != values.end()) {
+    if (values.find(value) != values.end())
       return values[value];
-    } else {
-      std::cout << "No more arguments available for variable, using default value 1.0" << std::endl;
-      return 1.0;
-    }
+    //std::cout << "No more arguments available for variable, using default value 1.0" << std::endl;
+    return 1.0;
   }
 
   if (getRequiredArguments() == 0)
@@ -115,6 +113,7 @@ double Node::evaluate(std::map<std::string, double>& values) const {
   return 0.0;
 }
 
+// nie moze byc const bo ja modyfikuje te zmienneeeeee
 void Node::getVariables(std::vector<std::string>* vars) {
   if (isVariable())
     if (std::find(vars->begin(), vars->end(), value) == vars->end())
@@ -124,10 +123,19 @@ void Node::getVariables(std::vector<std::string>* vars) {
 }
 
 bool Node::isVariable() const {
-  return getRequiredArguments() == 0
-            && !(value == "sin" || value == "cos")
-            && !(value[0] >= '0' && value[0] <= '9')
-            && !value.empty();
+  if (value.empty() || getRequiredArguments() != 0)
+    return false;
+
+  if (value == "sin" || value == "cos")
+    return false;
+
+  for (size_t i = 0; i < value.size(); ++i) {
+    char c = value[i];
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+      return true;
+  }
+
+  return false;
 }
 
 void Node::setValue(const std::string& val) {
@@ -145,7 +153,7 @@ std::vector<Node*> Node::getChildren() const {
 int Node::getRequiredArguments() const {
   if (value == "+" || value == "-" || value == "*" || value == "/")
     return 2;
-  else if (value == "sin" || value == "cos")
+  if (value == "sin" || value == "cos")
     return 1;
   return 0;
 }

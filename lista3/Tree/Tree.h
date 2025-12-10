@@ -27,8 +27,8 @@ public:
 
   std::vector<std::string>* getNodesWithVariables() const;
 
-  Tree operator+(const Tree& other);
-
+  Tree operator+(const Tree& other) const;
+  bool isEmpty() const;
 private:
   Node* root;
 };
