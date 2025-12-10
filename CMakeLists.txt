@@ -32,7 +32,6 @@ add_executable(lista3
         lista3/Tree/Node.cpp
         lista3/Tree/Node.h
         lista3/Tester.cpp
-        lista3/Tester.h
         lista3/Interface.cpp
         lista3/Interface.h)
 add_executable(lista4 lista4/Error.cpp lista4/Error.h
