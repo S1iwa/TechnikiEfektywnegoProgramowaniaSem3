@@ -31,6 +31,8 @@ public:
 
   std::string toString() const;
 
+  Tree operator+(const Tree& other) const;
+  bool isEmpty() const;
 private:
   Node* root;
 };

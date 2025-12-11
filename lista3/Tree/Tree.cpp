@@ -29,10 +29,11 @@ void Tree::print() const {
 }
 
 void Tree::join(const Tree& other) {
-  if (this->root == NULL || other.root == NULL) {
-    std::cout << "Cannot join trees: one of the roots is null." << std::endl;
-    return;
-  }
+  // To sie nigdy nie zdarzy w sumie
+  // if (this->root == NULL || other.root == NULL) {
+  //   std::cout << "Cannot join trees: one of the roots is null." << std::endl;
+  //   return;
+  // }
 
   Node* leaf = this->root;
   while (!leaf->getChildren().empty())
@@ -69,7 +70,7 @@ std::vector<std::string>* Tree::getNodesWithVariables() const {
   return vars;
 }
 
-Tree Tree::operator+(const Tree& other) {
+Tree Tree::operator+(const Tree& other) const {
   Tree result = *this;
   result.join(other);
   return result;
@@ -79,4 +80,8 @@ std::string Tree::toString() const {
   if (root == NULL)
     return "";
   return root->toString();
+}
+
+bool Tree::isEmpty() const {
+  return root->getValue().empty();
 }

@@ -46,5 +46,24 @@ int main() {
   std::cout << (n3 / n3 * n2) << std::endl;
   std::cout << (n100 - n3 / n3 * n2) << std::endl;
   std::cout << (n100 - 2) << std::endl;
-  std::cout << (n100 / (Number(5) - 5)) << std::endl;
+
+  std::cout << (n100 > n200) << std::endl;
+  std::cout << (n100 < n200) << std::endl;
+  std::cout << (n100 <= n200) << std::endl;
+  std::cout << (n100 >= n200) << std::endl;
+  std::cout << (n200 >= n200) << std::endl;
+  std::cout << (n100 >= n100) << std::endl;
+
+  std::cout << (--n100) << std::endl;
+  std::cout << (n100++) << std::endl;
+  std::cout << (n100++) << std::endl;
+  std::cout << (n100--) << std::endl;
+  std::cout << (n100--) << std::endl;
+  std::cout << (--n100) << std::endl;
+
+  try {
+    std::cout << (n100 / (Number(5) - 5)) << std::endl;
+  } catch (const std::invalid_argument &e) {
+    std::cout << "Caught exception: " << e.what() << std::endl;
+  }
 }

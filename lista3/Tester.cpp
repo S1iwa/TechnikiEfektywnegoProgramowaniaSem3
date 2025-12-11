@@ -5,6 +5,7 @@
 #include "Interface.h"
 
 int main() {
+  // UŁAAAA ale dużo
   Interface interface;
   interface.run();
   return 0;

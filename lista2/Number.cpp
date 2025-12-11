@@ -241,7 +241,7 @@ Number Number::divide(const Number &other) const {
   if (isZero())
     return Number(0);
 
-  if (!isGreaterOrEqualMagnitude(other))
+  if (!isGreaterOrEqualD(other))
     return Number(0);
 
   bool resultIsNegative = this->isNegative ^ other.isNegative;
@@ -250,29 +250,47 @@ Number Number::divide(const Number &other) const {
   Number absOther = other;
   absOther.isNegative = false;
 
-  int *quotientTable = new int[this->length];
-  int quotientIndex = 0;
+  int *resultTable = new int[this->length];
+  int index = 0;
 
   for (int i = 0; i < this->length; ++i) {
     reminder.internalAppend(table[i]);
     int count = 0;
 
-    while (reminder.isGreaterOrEqualMagnitude(absOther)) {
+    while (reminder.isGreaterOrEqualD(absOther)) {
       reminder.internalSubtract(absOther);
       count++;
     }
 
-    quotientTable[quotientIndex++] = count;
+    resultTable[index++] = count;
   }
 
   int zeros = 0;
-  while (zeros < quotientIndex - 1 && quotientTable[zeros] == 0)
+  while (zeros < index - 1 && resultTable[zeros] == 0)
     zeros++;
-  int finalLength = quotientIndex - zeros;
+  int finalLength = index - zeros;
 
-  Number result(quotientTable + zeros, finalLength, resultIsNegative);
-  delete[] quotientTable;
+  Number result(resultTable + zeros, finalLength, resultIsNegative);
+  delete[] resultTable;
   return result;
+}
+
+/* OPERATORY MATEMATYCZNE Z INT */
+
+Number Number::add(int value) const {
+  return this->add(Number(value));
+}
+
+Number Number::subtract(int value) const {
+  return this->subtract(Number(value));
+}
+
+Number Number::multiply(int value) const {
+  return this->multiply(Number(value));
+}
+
+Number Number::divide(int value) const {
+  return this->divide(Number(value));
 }
 
 /* OPERATORY ARYTMETYCZNE */
@@ -309,6 +327,67 @@ Number Number::operator*(int value) const {
 
 Number Number::operator/(int value) const {
   return *this / Number(value);
+}
+
+/* OPERATORY PORÓWNANIA */
+
+bool Number::operator>(Number &other) const {
+  if (this->isGreater(other))
+    return true;
+  return false;
+}
+
+bool Number::operator>=(Number &other) const {
+  if (this->isGreater(other) || (*this == other))
+    return true;
+  return false;
+}
+
+bool Number::operator<(Number &other) const {
+  if (this->isGreater(other))
+    return false;
+  return true;
+}
+
+bool Number::operator<=(Number &other) const {
+  if (this->isGreater(other) || (*this == other))
+    return false;
+  return true;
+}
+
+bool Number::operator==(Number &other) const {
+  if (this->isNegative != other.isNegative)
+    return false;
+  if (this->length != other.length)
+    return false;
+  for (int i = 0; i < this->length; ++i)
+    if (this->table[i] != other.table[i])
+      return false;
+  return true;
+}
+
+/* OPERATORY INKREMENTACJI/DEKREMENTACJI */
+
+Number& Number::operator++() {
+  *this = this->add(Number(1));
+  return *this;
+}
+
+Number Number::operator++(int) {
+  Number temp = *this;
+  ++(*this);
+  return temp;
+}
+
+Number& Number::operator--() {
+  *this = this->subtract(Number(1));
+  return *this;
+}
+
+Number Number::operator--(int) {
+  Number temp = *this;
+  --(*this);
+  return temp;
 }
 
 /* POMOCNICZE */
@@ -355,7 +434,7 @@ bool Number::isGreater(const Number &other) const {
   return false;
 }
 
-bool Number::isGreaterOrEqualMagnitude(const Number &other) const {
+bool Number::isGreaterOrEqualD(const Number &other) const {
   if (this->length > other.length)
     return true;
   if (this->length < other.length)

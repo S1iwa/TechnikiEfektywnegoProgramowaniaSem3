@@ -24,7 +24,12 @@ public:
   Number multiply(const Number &other) const;
   Number divide(const Number &other) const;
 
-  Number operator+(const Number& other) const;
+  Number add(int value) const;
+  Number subtract(int value) const;
+  Number multiply(int value) const;
+  Number divide(int value) const;
+
+  Number operator+(const Number &other) const;
   Number operator-(const Number &other) const;
   Number operator*(const Number &other) const;
   Number operator/(const Number &other) const;
@@ -33,6 +38,18 @@ public:
   Number operator-(int value) const;
   Number operator*(int value) const;
   Number operator/(int value) const;
+
+  bool operator>(Number &other) const;
+  bool operator>=(Number &other) const;
+  bool operator<(Number &other) const;
+  bool operator<=(Number &other) const;
+  bool operator==(Number &other) const;
+
+  Number& operator--();
+  Number operator--(int);
+
+  Number& operator++();
+  Number operator++(int);
 
 private:
   int *table;
@@ -47,7 +64,7 @@ private:
   static int calcLength(int value);
   static void reverseTable(int *tempTable, int size);
   bool isGreater(const Number &other) const;
-  bool isGreaterOrEqualMagnitude(const Number &other) const;
+  bool isGreaterOrEqualD(const Number &other) const;
   bool isZero() const;
   void internalAppend(int digit);
   void internalSubtract(const Number &other);
