@@ -27,8 +27,6 @@ public:
 
   std::vector<std::string>* getNodesWithVariables() const;
 
-  Tree operator+(const Tree& other);
-
   std::string toString() const;
 
   Tree operator+(const Tree& other) const;
