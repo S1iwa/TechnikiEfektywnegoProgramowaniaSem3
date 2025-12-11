@@ -29,6 +29,8 @@ public:
   int getRequiredArguments() const;
   std::vector<Node*> getChildren() const;
 
+  std::string toString() const;
+
  private:
   std::string value;
   std::vector<Node*> children;

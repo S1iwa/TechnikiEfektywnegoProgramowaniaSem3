@@ -29,6 +29,8 @@ public:
 
   Tree operator+(const Tree& other);
 
+  std::string toString() const;
+
 private:
   Node* root;
 };

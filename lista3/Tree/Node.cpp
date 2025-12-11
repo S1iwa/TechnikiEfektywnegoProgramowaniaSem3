@@ -59,7 +59,7 @@ bool Node::build(std::vector<std::string>& args) {
     args.erase(args.begin());
   } else {
     flag = false;
-    std::cout << "No more arguments available, setting default value '1'" << std::endl;
+    //std::cout << "No more arguments available, setting default value '1'" << std::endl;
     setValue("1");
   }
 
@@ -70,6 +70,7 @@ bool Node::build(std::vector<std::string>& args) {
         flag = false;
       children.push_back(child);
     }
+
   return flag;
 }
 
@@ -84,7 +85,7 @@ double Node::evaluate(std::map<std::string, double>& values) const {
     if (values.find(value) != values.end()) {
       return values[value];
     } else {
-      std::cout << "No more arguments available for variable, using default value 1.0" << std::endl;
+      //std::cout << "No more arguments available for variable, using default value 1.0" << std::endl;
       return 1.0;
     }
   }
@@ -148,4 +149,11 @@ int Node::getRequiredArguments() const {
   else if (value == "sin" || value == "cos")
     return 1;
   return 0;
+}
+
+std::string Node::toString() const {
+  std::string result = value;
+  for (int i = 0; i < children.size(); ++i)
+    result += " " + children[i]->toString();
+  return result;
 }

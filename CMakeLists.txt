@@ -32,9 +32,19 @@ add_executable(lista3
         lista3/Tree/Node.cpp
         lista3/Tree/Node.h
         lista3/Tester.cpp
-        lista3/Tester.h
         lista3/Interface.cpp
         lista3/Interface.h)
-add_executable(lista4 lista4/Error.cpp lista4/Error.h
-        lista4/Result.cpp
-        lista4/Result.h)
+
+add_executable(lista4 lista4/Error.h
+        lista4/Result.h
+        lista4/Tester.cpp
+        lista4/Tester.h
+        lista4/TreeAdapter.cpp
+        lista4/TreeAdapter.h
+        lista4/FileSaver.h
+        lista3/Tree/Tree.cpp
+        lista3/Tree/Tree.h
+        lista3/Tree/Node.cpp
+        lista3/Tree/Node.h
+        lista3/Interface.cpp
+        lista3/Interface.h)

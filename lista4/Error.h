@@ -9,8 +9,9 @@
 
 class Error {
 public:
-    explicit Error(std::string message);
-    const std::string* what() const;
+    explicit Error(std::string message) : message(std::move(message)) {};
+    virtual ~Error() = default;
+    std::string getMessage() const { return message; }
 private:
     std::string message;
 };

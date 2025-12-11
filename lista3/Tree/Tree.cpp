@@ -74,3 +74,9 @@ Tree Tree::operator+(const Tree& other) {
   result.join(other);
   return result;
 }
+
+std::string Tree::toString() const {
+  if (root == NULL)
+    return "";
+  return root->toString();
+}
