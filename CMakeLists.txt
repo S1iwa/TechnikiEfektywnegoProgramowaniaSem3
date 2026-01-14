@@ -48,3 +48,8 @@ add_executable(lista4 lista4/Error.h
         lista3/Tree/Node.h
         lista3/Interface.cpp
         lista3/Interface.h)
+add_executable(lista5
+        lista5/Tester.cpp
+        lista5/MySmartPointer.h
+        lista5/SellData.cpp
+        lista5/SellData.h)
