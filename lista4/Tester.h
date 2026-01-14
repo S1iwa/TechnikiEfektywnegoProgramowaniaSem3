@@ -10,8 +10,9 @@
 
 class Tester {
 public:
-  Result<double, Error> safeDivide(double a, double b);
+  static Result<double, Error> safeDivide(double a, double b);
   static void test(std::vector<std::string>& args, std::string& filename);
+  static void testMismatch(Result<double, Error>& result);
 };
 
 #endif  // TEPSEM3_TESTER_H

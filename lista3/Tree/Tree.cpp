@@ -16,10 +16,10 @@ Tree::~Tree() {
 }
 
 bool Tree::build(std::vector<std::string>& args) {
-  std::cout << "Building tree with args:";
-  for (int i = 0; i < args.size(); ++i)
-    std::cout << " " << args[i];
-  std::cout << std::endl;
+  // std::cout << "Building tree with args:";
+  // for (int i = 0; i < args.size(); ++i)
+  //   std::cout << " " << args[i];
+  // std::cout << std::endl;
   return root->build(args);
 }
 

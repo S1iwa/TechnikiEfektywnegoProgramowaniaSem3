@@ -23,7 +23,7 @@ int main() {
   filename = "tree2.txt";
   Tester::test(args, filename);
 
-  args = {"+"};
+  args = {"+", "2"};
   filename = "tree3.txt";
   Tester::test(args, filename);
 
@@ -31,11 +31,17 @@ int main() {
   filename = "tree4.txt";
   Tester::test(args, filename);
 
+  Result<double, Error> result = Tester::safeDivide(10, 0);
+
   return 0;
 }
 
 void Tester::test(std::vector<std::string>& args, std::string& filename) {
   Result<Tree, Error> result = TreeAdapter::buildTree(args);
+  std::cout << "Tree with args: ";
+  for (const auto& arg : args)
+    std::cout << arg << " ";
+  std::cout << std::endl;
   if (result.isSuccess()) {
     std::cout << "Tree built successfully." << std::endl;
   } else {

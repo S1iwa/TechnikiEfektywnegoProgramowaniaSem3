@@ -8,9 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "Error.h"
-
-template<typename T, typename E>
+template <typename T, typename E>
 class Result {
 public:
   Result(const T& value) : value(new T(value)), errors() {};
@@ -147,6 +145,11 @@ public:
   }
 private:
   std::vector<E*> errors;
+};
+
+template<typename T>
+class Result<T, T> {
+  Result();
 };
 
 #endif  // TEPSEM3_RESULT_H
