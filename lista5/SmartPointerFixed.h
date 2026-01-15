@@ -1,6 +1,8 @@
 #ifndef TEPSEM3_SMARTPOINTER_H
 #define TEPSEM3_SMARTPOINTER_H
 
+#include <map>
+
 class RefCounter {
 public:
   RefCounter() : count(0) {}
@@ -16,8 +18,16 @@ class SmartPointer {
 public:
   SmartPointer(T *pointer) {
     this->pointer = pointer;
-    counter = new RefCounter();
-    counter->addRef();
+
+    auto it = tracked_pointers.find(pointer);
+    if (it != tracked_pointers.end()) {
+      counter = it->second;
+      counter->addRef();
+    } else {
+      counter = new RefCounter();
+      counter->addRef();
+      tracked_pointers[pointer] = counter;
+    }
   }
 
   SmartPointer(const SmartPointer &other) {
@@ -30,6 +40,7 @@ public:
     if (counter->decRef() == 0) {
       delete pointer;
       delete counter;
+      tracked_pointers.erase(pointer);
     }
   }
 
@@ -38,6 +49,7 @@ public:
       if (counter->decRef() == 0) {
         delete pointer;
         delete counter;
+        tracked_pointers.erase(pointer);
       }
       pointer = other.pointer;
       counter = other.counter;
@@ -57,8 +69,10 @@ public:
 private:
   T *pointer;
   RefCounter *counter;
+  static std::map<T*, RefCounter*> tracked_pointers;
 };
 
-
+template<typename T>
+std::map<T*, RefCounter*> SmartPointer<T>::tracked_pointers;
 
 #endif  // TEPSEM3_SMARTPOINTER_H

@@ -6,7 +6,7 @@
 
 #include "../lista3/Tree/Tree.h"
 #include "../lista4/TreeAdapter.h"
-#include "SmartPointer.h"
+#include "SmartPointerFixed.h"
 
 Tree createTree() {
   std::vector<std::string> args = {"+", "3", "*", "x", "2"};
@@ -15,8 +15,7 @@ Tree createTree() {
 }
 
 int main() {
-  std::cout << "--- Test 1: MySmartPointer ---" << std::endl;
-  auto val = new int(10);
+  int* val = new int(10);
   {
     SmartPointer<int> sp1(val);
     std::cout << "SP1 value: " << *sp1 << std::endl;
@@ -27,34 +26,38 @@ int main() {
     }
     std::cout << "SP1 value after SP2 scope: " << *sp1 << std::endl;
   }
-  std::cout << "Smart Pointer test finished.\n" << std::endl;
+  std::cout << "\n\n";
 
 
-  
 
-  // --- TEST 2: Move Semantics dla Tree ---
-  std::cout << "--- Test 2: Tree Move Semantics ---" << std::endl;
+  Tree tree1 = createTree();
 
-  std::vector<std::string> args = {"+", "a", "b"};
-  Result<Tree, Error> res = TreeAdapter::buildTree(args);
-  Tree tree1 = res.getValue();
-
-  std::cout << "1. Copying tree (Normal Copy):" << std::endl;
-  Tree tree2 = tree1; // Uruchomi się zwykły konstruktor kopiujący (Deep Copy)
+  std::cout << "1. Copying tree:" << std::endl;
+  Tree tree2 = tree1;
 
   std::cout << "\n2. Moving tree (std::move):" << std::endl;
-  // Tu powinien zadziałać Twój nowy konstruktor przenoszący!
-  // tree1 zostanie "ograbione" z danych, tree3 przejmie wskaźnik.
   Tree tree3 = std::move(tree1);
 
   std::cout << "\n3. Move Assignment:" << std::endl;
   Tree tree4;
-  // Operator przypisania przenoszącego
   tree4 = std::move(tree2);
 
-  std::cout << "\nChecking structure:" << std::endl;
-  std::cout << "Tree3 (moved from Tree1): " << tree3.toString() << std::endl;
+  std::cout << "\nTree3 (moved from Tree1): " << tree3.toString() << std::endl;
   std::cout << "Tree1 (after move): " << tree1.toString() << " (Should be empty)" << std::endl;
 
+
+
+  std::cout << "\n\n";
+  int* rawPointer = new int(99);
+  {
+    SmartPointer<int> sp1(rawPointer);
+    std::cout << "Sp1 created. Value: " << *sp1 << std::endl;
+    {
+      SmartPointer<int> sp2(rawPointer);
+      std::cout << "Sp2 created from same raw pointer. Value: " << *sp2 << std::endl;
+      *sp2 = 100;
+    }
+    std::cout << "Sp2  destroyed. Sp1 Value should be 100: " << *sp1 << std::endl;
+  }
   return 0;
 }

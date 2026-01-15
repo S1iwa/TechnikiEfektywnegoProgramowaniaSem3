@@ -51,8 +51,7 @@ add_executable(lista4 lista4/Error.h
 add_executable(lista5
         lista5/Tester.cpp
         lista5/SmartPointer.h
-        lista5/SellData.cpp
-        lista5/SellData.h
+        lista5/SmartPointerFixed.h
         lista4 lista4/Error.h
         lista4/Result.h
         lista4/TreeAdapter.cpp
