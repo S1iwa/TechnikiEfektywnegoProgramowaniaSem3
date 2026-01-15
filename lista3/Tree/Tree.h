@@ -19,6 +19,9 @@ public:
   Tree& operator=(const Tree& other);
   Tree(const Tree& other);
 
+  Tree(Tree&& other) noexcept;
+  Tree & operator=(Tree&& other) noexcept;
+
   // Zwraca false, jeżeli musiano modyfikować, aby było poprawne
   bool build(std::vector<std::string>& args);
   void print() const;

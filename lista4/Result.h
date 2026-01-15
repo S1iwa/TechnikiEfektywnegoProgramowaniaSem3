@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include "Error.h"
+
 template <typename T, typename E>
 class Result {
 public:

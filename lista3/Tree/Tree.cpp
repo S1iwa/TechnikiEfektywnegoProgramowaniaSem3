@@ -15,6 +15,22 @@ Tree::~Tree() {
   delete root;
 }
 
+Tree::Tree(Tree&& other) noexcept {
+  this->root = other.root;
+  other.root = nullptr;
+  std::cout << "Move constructor used" << std::endl;
+}
+
+Tree& Tree::operator=(Tree&& other) noexcept {
+  if (this != &other) {
+    delete this->root;
+    this->root = other.root;
+    other.root = nullptr;
+    std::cout << "Move assignment used" << std::endl;
+  }
+  return *this;
+}
+
 bool Tree::build(std::vector<std::string>& args) {
   // std::cout << "Building tree with args:";
   // for (int i = 0; i < args.size(); ++i)
@@ -56,6 +72,7 @@ Tree& Tree::operator=(const Tree& other) {
 }
 
 Tree::Tree(const Tree& other) {
+  std::cout << "Copy constructor used" << std::endl;
   root = new Node();
   *root = *other.root;
 }

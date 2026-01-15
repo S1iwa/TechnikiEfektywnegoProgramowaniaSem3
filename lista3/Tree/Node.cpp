@@ -90,8 +90,8 @@ double Node::evaluate(std::map<std::string, double>& values) const {
     }
   }
 
-  if (getRequiredArguments() == 0)
-    return Interface::toDouble(value);
+  // if (getRequiredArguments() == 0)
+  //   return Interface::toDouble(value);
 
   std::vector<double> child_results;
   child_results.reserve(children.size());

@@ -50,6 +50,14 @@ add_executable(lista4 lista4/Error.h
         lista3/Interface.h)
 add_executable(lista5
         lista5/Tester.cpp
-        lista5/MySmartPointer.h
+        lista5/SmartPointer.h
         lista5/SellData.cpp
-        lista5/SellData.h)
+        lista5/SellData.h
+        lista4 lista4/Error.h
+        lista4/Result.h
+        lista4/TreeAdapter.cpp
+        lista4/TreeAdapter.h
+        lista3/Tree/Tree.cpp
+        lista3/Tree/Tree.h
+        lista3/Tree/Node.cpp
+        lista3/Tree/Node.h)
