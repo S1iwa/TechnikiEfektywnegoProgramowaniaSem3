@@ -6,6 +6,7 @@
 
 #include "../lista3/Tree/Tree.h"
 #include "../lista4/TreeAdapter.h"
+#include "SmartPointer.h"
 #include "SmartPointerFixed.h"
 
 Tree createTree() {
@@ -48,16 +49,35 @@ int main() {
 
 
   std::cout << "\n\n";
-  int* rawPointer = new int(99);
+
+  BorrowingPointer<int>* externalBorrower = nullptr;
   {
-    SmartPointer<int> sp1(rawPointer);
-    std::cout << "Sp1 created. Value: " << *sp1 << std::endl;
-    {
-      SmartPointer<int> sp2(rawPointer);
-      std::cout << "Sp2 created from same raw pointer. Value: " << *sp2 << std::endl;
-      *sp2 = 100;
-    }
-    std::cout << "Sp2  destroyed. Sp1 Value should be 100: " << *sp1 << std::endl;
+    SmartPointer<int> sp(new int(123));
+    std::cout << "Sp value: " << *sp << std::endl;
+
+    BorrowingPointer<int> borrower = sp.getBorrowingPointer();
+    std::cout << "2. Borrower created. Value: " << *borrower << std::endl;
+
+    *borrower = 999;
+    std::cout << "3. Modified via borrower. Sp value: " << *sp << std::endl;
+
+    externalBorrower = new BorrowingPointer<int>(borrower);
+    std::cout << "4. Exiting owner scope..." << std::endl;
   }
+  // Sp tutaj znika:
+  // notifyObjectDeleted() -> externalBorrower->reset()
+  // czyli usuwa pamiec inta
+
+
+  std::cout << "Is bp null:" << externalBorrower->isValid() << std::endl;
+
+  try {
+    std::cout << "Value: " << **externalBorrower << std::endl;
+  } catch (const std::exception& e) {
+    std::cout << "Error: " << e.what() << std::endl;
+  }
+
+  delete externalBorrower;
+
   return 0;
 }

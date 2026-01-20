@@ -59,4 +59,5 @@ add_executable(lista5
         lista3/Tree/Tree.cpp
         lista3/Tree/Tree.h
         lista3/Tree/Node.cpp
-        lista3/Tree/Node.h)
+        lista3/Tree/Node.h
+)
